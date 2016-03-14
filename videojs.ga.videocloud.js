@@ -84,7 +84,13 @@
       if (!isInAdState(player) && metadataLoaded && !paused) {
 		duration = Math.round(player.duration());
 		track0 = 1;
-		wap_tms.HTML5_brightcove.videoPlay(duration, videoName, videoId);        				
+		if(wap_tms){
+			wap_tms.HTML5_brightcove.videoPlay(duration, videoName, videoId);   
+		} else{
+			parent.wap_tms.HTML5_brightcove.videoPlay(duration, videoName, videoId); 
+		}
+		
+		     				
 		track25 = 0;
 		track50 = 0;
 		track75 = 0;
