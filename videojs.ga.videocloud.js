@@ -20,9 +20,14 @@
 		trackVideoProgress = wap_tms.HTML5_brightcove.videoProgress;
 	}
 	catch(e){
-		trackVideoPlay = parent.wap_tms.HTML5_brightcove.videoPlay;
-		trackVideoEnd = parent.wap_tms.HTML5_brightcove.videoEnd;
-		trackVideoProgress = parent.wap_tms.HTML5_brightcove.videoProgress;
+		 (function(a,b,c,d){
+		a='//tags.tiqcdn.com/utag/intel/profile-microsite/prod/utag.js';
+		b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;
+		a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);
+		})();
+		trackVideoPlay = wap_tms.HTML5_brightcove.videoPlay;
+		trackVideoEnd = wap_tms.HTML5_brightcove.videoEnd;
+		trackVideoProgress = wap_tms.HTML5_brightcove.videoProgress;
 	}
 	finally{
 		if (!trackVideoPlay || !trackVideoProgress || !trackVideoEnd)
