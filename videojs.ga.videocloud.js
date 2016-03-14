@@ -1,6 +1,111 @@
-/*
-* videojs-ga - v0.4.1 - 2015-08-10
-* Copyright (c) 2015 Michael Bensoussan
-* Licensed MIT
-*/
-(function(){var a=[].indexOf||function(a){for(var b=0,c=this.length;c>b;b++)if(b in this&&this[b]===a)return b;return-1};videojs.plugin("ga",function(b){var c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L;return null==b&&(b={}),A=document.createElement("a"),A.href=document.referrer,self!==top&&"preview-players.brightcove.net"===window.location.host&&(A.hostname="studio.brightcove.com")?void videojs.log("Google analytics plugin will not track events in Video Cloud Studio"):(z=this,e={},this.options()["data-setup"]&&(u=JSON.parse(this.options()["data-setup"]),u.ga&&(e=u.ga)),g=["player_load","video_load","percent_played","start","end","seek","play","pause","resize","volume_change","error","fullscreen"],n=b.eventsToTrack||e.eventsToTrack||g,x=b.percentsPlayedInterval||e.percentsPlayedInterval||10,k=b.eventCategory||e.eventCategory||"Brightcove Player",f=b.eventLabel||e.eventLabel,G=b.sendbeaconOverride||!1,w=[],I=!1,i=!1,D=C=0,E=!1,l="",d="",m={video_load:"Video Load",percent_played:"Percent played",start:"Media Begin",seek_start:"Seek start",seek_end:"Seek end",play:"Media Play",pause:"Media Pause",error:"Error",fullscreen_exit:"Fullscreen Exited",fullscreen_enter:"Fullscreen Entered",resize:"Resize",volume_change:"Volume Change",player_load:"Player Load",end:"Media Complete"},p=function(a){return b.eventNames&&b.eventNames[a]?b.eventNames[a]:e.eventNames&&e.eventNames[a]?e.eventNames[a]:m[a]?m[a]:a},("players.brightcove.net"===window.location.host||"preview-players.brightcove.net"===window.location.host)&&(K=b.tracker||e.tracker,K&&(!function(a,b,c,d,e,f,g){return a.GoogleAnalyticsObject=e,a[e]=a[e]||function(){return(a[e].q=a[e].q||[]).push(arguments)},a[e].l=1*new Date,f=b.createElement(c),g=b.getElementsByTagName(c)[0],f.async=1,f.src=d,g.parentNode.insertBefore(f,g)}(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create",K,"auto"),ga("require","displayfeatures"))),c=/(\s|^)vjs-ad-(playing|loading)(\s|$)/,s=function(a){return c.test(a.el().className)},t=function(){s(z)||(l=f?f:z.mediainfo&&z.mediainfo.id?z.mediainfo.id+" | "+z.mediainfo.name:this.currentSrc().split("/").slice(-1)[0].replace(/\.(\w{3,4})(\?.*)?$/i,""),z.mediainfo&&z.mediainfo.id&&z.mediainfo.id!==d&&(d=z.mediainfo.id,w=[],I=!1,i=!1,D=C=0,E=!1,a.call(n,"video_load")>=0&&F(p("video_load"),!0)))},J=function(){var b,c,d,e,f;if(!s(z)){for(b=Math.round(this.currentTime()),c=Math.round(this.duration()),e=Math.round(b/c*100),d=f=0;99>=f;d=f+=x)e>=d&&a.call(w,d)<0&&(a.call(n,"percent_played")>=0&&0!==e&&F(p("percent_played"),!0,d),e>0&&w.push(d));a.call(n,"seek")>=0&&(D=C,C=b,Math.abs(D-C)>1&&(E=!0,F(p("seek_start"),!1,D),F(p("seek_end"),!1,C)))}},h=function(){s(z)||i||(F(p("end"),!0),i=!0)},y=function(){var a;s(z)||(a=Math.round(this.currentTime()),F(p("play"),!0,a),E=!1)},H=function(){return!s(z)&&a.call(n,"start")>=0&&!I?(F(p("start"),!0),I=!0):void 0},v=function(){var a,b;s(z)||(a=Math.round(this.currentTime()),b=Math.round(this.duration()),a===b||E||F(p("pause"),!0,a))},L=function(){var a;a=this.muted()===!0?0:this.volume(),F(p("volume_change"),!1,a)},B=function(){F(p("resize")+" - "+this.width()+"*"+this.height(),!0)},j=function(){var a;a=Math.round(this.currentTime()),F(p("error"),!0,a)},o=function(){var a;a=Math.round(this.currentTime()),("function"==typeof this.isFullscreen?this.isFullscreen():void 0)||("function"==typeof this.isFullScreen?this.isFullScreen():void 0)?F(p("fullscreen_enter"),!1,a):F(p("fullscreen_exit"),!1,a)},F=function(a,b,c){G?G(k,a,l,c,b):window.ga?ga("send","event",{eventCategory:k,eventAction:a,eventLabel:l,eventValue:c,nonInteraction:b}):window._gaq?_gaq.push(["_trackEvent",k,a,l,c,b]):videojs.log("Google Analytics not detected")},a.call(n,"player_load")>=0&&(self!==top?(q=document.referrer,r=1):(q=window.location.href,r=0)),G?G(k,p("player_load"),q,r,!0):window.ga?ga("send","event",{eventCategory:k,eventAction:p("player_load"),eventLabel:q,eventValue:r,nonInteraction:!0}):window._gaq?_gaq.push(["_trackEvent",k,p("player_load"),q,r,!1]):videojs.log("Google Analytics not detected"),void this.ready(function(){return this.on("loadedmetadata",t),this.on("timeupdate",J),a.call(n,"end")>=0&&this.on("ended",h),a.call(n,"play")>=0&&this.on("play",y),a.call(n,"start")>=0&&this.on("playing",H),a.call(n,"pause")>=0&&this.on("pause",v),a.call(n,"volume_change")>=0&&this.on("volumechange",L),a.call(n,"resize")>=0&&this.on("resize",B),a.call(n,"error")>=0&&this.on("error",j),a.call(n,"fullscreen")>=0?this.on("fullscreenchange",o):void 0}))})}).call(this);
+/** ga plugin **/
+            (function() {
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  videojs.plugin('ga', function(options) {
+    var adStateRegex, currentVideo, end, href, iframe, isInAdState, loaded, parsedOptions, pause, play, player, referrer, timeupdate, tracker,
+      _this = this, metadataLoaded = false, paused = false, videoName = "", videoId, track0 = 0, track25 = 0, track50 = 0, track75 = 0, track90 = 0, track95 = 0;
+    referrer = document.createElement('a');
+    referrer.href = document.referrer;
+    if (self !== top && window.location.host === 'preview-players.brightcove.net' && (referrer.hostname = 'studio.brightcove.com')) {
+      videojs.log('Google analytics plugin will not track events in Video Cloud Studio');
+      return;
+    }
+    player = this;
+    adStateRegex = /(\s|^)vjs-ad-(playing|loading)(\s|$)/;
+    isInAdState = function(player) {
+      return adStateRegex.test(player.el().className);
+    };
+    loaded = function() {
+      if (!isInAdState(player)) {
+		metadataLoaded = true;
+          videoName = "error: video name not available";
+		  videoId = "error: video id not available";
+		  if (player.mediainfo) {
+			if(player.mediainfo.name)
+				videoName = player.mediainfo.name;
+			if(player.mediainfo.id)
+				videoId = player.mediainfo.id;
+		  } 
+      }
+    };
+    timeupdate = function() {
+      var currentTime, duration, percent, percentPlayed;
+      if (!isInAdState(player)) {
+        currentTime = Math.round(this.currentTime());
+        duration = Math.round(this.duration());
+        percentPlayed = Math.round(currentTime / duration * 100);		
+		if (percentPlayed >= 50 && percentPlayed <= 53) {
+				percentPlayed = "mid";
+			}
+			if (percentPlayed == "mid") {
+				if (track50 == 0) {
+					percentPlayed = 50;
+					wap_tms.HTML5_brightcove.videoProgress(duration,percentPlayed, videoName, videoId);
+					track50 = 1;
+				}
+			} else if (percentPlayed >= 1 && percentPlayed <= 4) {
+				if (track0 == 0) {
+					play();
+				}
+			} else if (percentPlayed >= 25 && percentPlayed <= 28) {
+				if (track25 == 0) {
+					percentPlayed = 25;
+					wap_tms.HTML5_brightcove.videoProgress(duration,percentPlayed, videoName, videoId);
+					track25 = 1;
+				}
+			} else if (percentPlayed >= 75 && percentPlayed <= 78) {
+				if (track75 == 0) {
+					percentPlayed = 75;
+					wap_tms.HTML5_brightcove.videoProgress(duration,percentPlayed, videoName, videoId);
+					track75 = 1;
+				}
+			} else if (percentPlayed >= 90 && percentPlayed <= 93) {
+				if (track90 == 0) {
+					percentPlayed = 90;
+					wap_tms.HTML5_brightcove.videoProgress(duration,percentPlayed, videoName, videoId);
+					track90 = 1;
+				}
+			} else if (percentPlayed >= 95 && percentPlayed <= 98) {
+				if (track95 == 0) {
+					percentPlayed = 95;
+					wap_tms.HTML5_brightcove.videoProgress(duration,percentPlayed, videoName, videoId);
+					track95 = 1;
+				}
+			}		
+      }
+    };
+    end = function() {
+	  if (!isInAdState(player)){
+		wap_tms.HTML5_brightcove.videoEnd(videoName, videoId);
+      }
+    };
+    play = function() {	
+      if (!isInAdState(player) && metadataLoaded && !paused) {
+		duration = Math.round(player.duration());
+		track0 = 1;
+		wap_tms.HTML5_brightcove.videoPlay(duration, videoName, videoId);        				
+		track25 = 0;
+		track50 = 0;
+		track75 = 0;
+		track90 = 0;
+		track95 = 0;
+      }
+	  paused = false;
+    };
+    pause = function() {
+      var currentTime, duration;
+      if (!isInAdState(player) && !this.ended()) {
+		paused = true;
+      }
+    };
+    this.ready(function() {
+      this.on("loadedmetadata", loaded);
+      this.on("timeupdate", timeupdate);
+	  this.on("play", play);
+	  this.on("pause", pause);
+	  this.on("ended", end);
+    });
+  });
+
+}).call(this);
