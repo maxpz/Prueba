@@ -11,6 +11,23 @@
       videojs.log('Google analytics plugin will not track events in Video Cloud Studio');
       return;
     }
+	var trackVideoPlay; 
+	var trackVideoProgress; 
+	var trackVideoEnd; 
+	try{
+		trackVideoPlay = wap_tms.HTML5_brightcove.videoPlay;
+		trackVideoEnd = wap_tms.HTML5_brightcove.videoEnd;
+		trackVideoProgress = wap_tms.HTML5_brightcove.videoProgress;
+	}
+	catch(e){
+		trackVideoPlay = parent.wap_tms.HTML5_brightcove.videoPlay;
+		trackVideoEnd = parent.wap_tms.HTML5_brightcove.videoEnd;
+		trackVideoProgress = parent.wap_tms.HTML5_brightcove.videoProgress;
+	}
+	finally{
+		if (!trackVideoPlay || !trackVideoProgress || !trackVideoEnd)
+		    return; 
+	}
     player = this;
     adStateRegex = /(\s|^)vjs-ad-(playing|loading)(\s|$)/;
     isInAdState = function(player) {
@@ -41,7 +58,7 @@
 			if (percentPlayed == "mid") {
 				if (track50 == 0) {
 					percentPlayed = 50;
-					wap_tms.HTML5_brightcove.videoProgress(duration,percentPlayed, videoName, videoId);
+					trackVideoProgress(duration,percentPlayed, videoName, videoId);
 					track50 = 1;
 				}
 			} else if (percentPlayed >= 1 && percentPlayed <= 4) {
@@ -51,25 +68,25 @@
 			} else if (percentPlayed >= 25 && percentPlayed <= 28) {
 				if (track25 == 0) {
 					percentPlayed = 25;
-					wap_tms.HTML5_brightcove.videoProgress(duration,percentPlayed, videoName, videoId);
+					trackVideoProgress(duration,percentPlayed, videoName, videoId);
 					track25 = 1;
 				}
 			} else if (percentPlayed >= 75 && percentPlayed <= 78) {
 				if (track75 == 0) {
 					percentPlayed = 75;
-					wap_tms.HTML5_brightcove.videoProgress(duration,percentPlayed, videoName, videoId);
+					trackVideoProgress(duration,percentPlayed, videoName, videoId);
 					track75 = 1;
 				}
 			} else if (percentPlayed >= 90 && percentPlayed <= 93) {
 				if (track90 == 0) {
 					percentPlayed = 90;
-					wap_tms.HTML5_brightcove.videoProgress(duration,percentPlayed, videoName, videoId);
+					trackVideoProgress(duration,percentPlayed, videoName, videoId);
 					track90 = 1;
 				}
 			} else if (percentPlayed >= 95 && percentPlayed <= 98) {
 				if (track95 == 0) {
 					percentPlayed = 95;
-					wap_tms.HTML5_brightcove.videoProgress(duration,percentPlayed, videoName, videoId);
+					trackVideoProgress(duration,percentPlayed, videoName, videoId);
 					track95 = 1;
 				}
 			}		
@@ -77,20 +94,14 @@
     };
     end = function() {
 	  if (!isInAdState(player)){
-		wap_tms.HTML5_brightcove.videoEnd(videoName, videoId);
+		trackVideoEnd(videoName, videoId);
       }
     };
     play = function() {	
       if (!isInAdState(player) && metadataLoaded && !paused) {
 		duration = Math.round(player.duration());
 		track0 = 1;
-		if(wap_tms){
-			wap_tms.HTML5_brightcove.videoPlay(duration, videoName, videoId);   
-		} else{
-			parent.wap_tms.HTML5_brightcove.videoPlay(duration, videoName, videoId); 
-		}
-		
-		     				
+		trackVideoPlay(duration, videoName, videoId);        				
 		track25 = 0;
 		track50 = 0;
 		track75 = 0;
